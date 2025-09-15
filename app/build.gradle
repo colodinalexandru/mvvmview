@@ -1,0 +1,124 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.colodin.mvvmviewcustom'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.colodin.mvvmviewcustom"
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "com.colodin.mvvmviewcustom.MyTestRunner"
+    }
+
+    buildTypes {
+
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            enableUnitTestCoverage true
+            enableAndroidTestCoverage true
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        dev {
+            dimension "environment"
+            ext {
+                DUMMY_URL = "https://dummyjson.com/"
+            }
+        }
+
+        applicationVariants.all { variant ->
+            def dimensions = variant.productFlavors
+            def environment = dimensions[0]
+            def dummyUrl = environment.ext.DUMMY_URL
+            variant.buildConfigField "String", "DUMMY_URL", "\"$dummyUrl\""
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+
+    // Koin
+    implementation "io.insert-koin:koin-android:4.1.1"
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // Retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:3.0.0'
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.13.1'
+
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.1.0'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.9.3'
+
+
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "io.insert-koin:koin-test:4.1.0"
+    testImplementation "io.insert-koin:koin-test-junit4:4.1.0"
+
+    //
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+
+    def fragment_version = "1.5.5"
+
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+}
